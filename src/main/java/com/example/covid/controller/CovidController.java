@@ -16,8 +16,8 @@ public class CovidController {
 
     @GetMapping("/date/{year}/{month}/{day}")
     public String getQuarantineTime(@PathVariable int year,
-                                    @PathVariable int month,
-                                    @PathVariable int day) {
+                                  @PathVariable int month,
+                                  @PathVariable int day) {
         return covidService.getQuarantineTime(year, month, day);
     }
 }
