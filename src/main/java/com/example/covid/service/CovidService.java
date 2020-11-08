@@ -7,7 +7,12 @@ import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 @Service
@@ -23,7 +28,7 @@ public class CovidService {
 
     public String getQuarantineTime(int year, int month, int day) {
         //GET request to timeserver to get current time:
-        TimeServerResponse ResponseCurrentTime = restTemplate.exchange("http://localhost:8080/api/v1/getTime",
+        TimeServerResponse responseCurrentTime = restTemplate.exchange("http://localhost:8080/api/v1/getTime",
                 HttpMethod.GET,
                 null,
                 TimeServerResponse.class).getBody();
@@ -32,10 +37,11 @@ public class CovidService {
         String exposureMonth = Integer.toString(month);
         String exposureDay = Integer.toString(day);
         String exposureTime = exposureYear + "-" + exposureMonth + "-" + exposureDay;
-        String currentTime = ResponseCurrentTime.getLocalTime();
+        String currentTime = responseCurrentTime.getLocalTime();
 
         //Parsing the date
-        LocalDate dateOfExposure = LocalDate.parse(exposureTime);
+        DateTimeFormatter dateFormat = new DateTimeFormatter("yyyy-MM-dd'T'HH:mm:ss:SSS'Z'ZZZ");
+        LocalDate dateOfExposure = LocalDate.parse(exposureTime, dateFormat);
         System.out.println(dateOfExposure);
         LocalDate dateNow = LocalDate.parse(currentTime);
         System.out.println(dateNow);
